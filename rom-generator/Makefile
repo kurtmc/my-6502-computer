@@ -3,3 +3,6 @@ rom.bin: main.go
 
 program: rom.bin
 	sudo minipro -p AT28C256 -w rom.bin
+
+dump: rom.bin
+	hexdump -C rom.bin
