@@ -10,6 +10,9 @@ func main() {
 		rom[i] = 0xea
 	}
 
+	rom[0x7ffc] = 0x00
+	rom[0x7ffd] = 0x80
+
 	err := ioutil.WriteFile("rom.bin", rom, 0644)
 
 	if err != nil {
