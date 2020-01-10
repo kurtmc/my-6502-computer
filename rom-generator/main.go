@@ -18,14 +18,14 @@ func main() {
 	rom[0x7ffc] = 0x00
 	rom[0x7ffd] = 0x80
 
-	// lda 0x42
-	rom[0] = 0xa9
-	rom[1] = 0x42
+	code := []byte{
+		0xa9, 0x42, // lda 0x42
+		0x8d, 0x00, 0x60, // sta 0x6000
+	}
 
-	// sta 0x6000
-	rom[2] = 0x8d
-	rom[3] = 0x00
-	rom[4] = 0x60
+	for i, v := range code {
+		rom[i] = v
+	}
 
 	err := ioutil.WriteFile("rom.bin", rom, 0644)
 
