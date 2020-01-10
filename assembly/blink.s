@@ -5,7 +5,7 @@ reset:
   sta $6002
 
   lda #$50
-  sta $6002
+  sta $6000
 
 loop:
   ror
