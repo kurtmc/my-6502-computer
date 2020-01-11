@@ -67,57 +67,20 @@ reset:
   lda #0 ; Clear RS/RW/E bits
   sta PORTA
 
-; Write "H"
-  lda #"H"
-  jsr write_character
+  jmp print_msg
 
-; Write "e"
-  lda #"e"
-  jsr write_character
+msg:
+  .string "Hello, World!"
 
-; Write "l"
-  lda #"l"
+print_msg:
+  ldx #0    ; Start with the first byte 
+_loop:
+  lda msg,x ; load a byte from SRC into the A register 
   jsr write_character
-
-; Write "l"
-  lda #"l"
-  jsr write_character
-
-; Write "o"
-  lda #"o"
-  jsr write_character
-
-; Write ","
-  lda #","
-  jsr write_character
-
-; Write " "
-  lda #" "
-  jsr write_character
-
-; Write "W"
-  lda #"W"
-  jsr write_character
-
-; Write "o"
-  lda #"o"
-  jsr write_character
-
-; Write "r"
-  lda #"r"
-  jsr write_character
-
-; Write "l"
-  lda #"l"
-  jsr write_character
-
-; Write "d"
-  lda #"d"
-  jsr write_character
-
-; Write "!"
-  lda #"!"
-  jsr write_character
+  inx       ; bump the index register to point to the next SRC and DST locations 
+  lda msg,x ; load a byte from SRC into the A register 
+  cmp #0    ; is this the zero byte?
+  bne _loop ; if not, go move the next one
 
   jmp loop
 
