@@ -68,61 +68,61 @@ reset:
   sta PORTA
 
 ; Write "H"
-  ldx #"H"
+  lda #"H"
   jsr write_character
 
 ; Write "e"
-  ldx #"e"
+  lda #"e"
   jsr write_character
 
 ; Write "l"
-  ldx #"l"
+  lda #"l"
   jsr write_character
 
 ; Write "l"
-  ldx #"l"
+  lda #"l"
   jsr write_character
 
 ; Write "o"
-  ldx #"o"
+  lda #"o"
   jsr write_character
 
 ; Write ","
-  ldx #","
+  lda #","
   jsr write_character
 
 ; Write " "
-  ldx #" "
+  lda #" "
   jsr write_character
 
 ; Write "W"
-  ldx #"W"
+  lda #"W"
   jsr write_character
 
 ; Write "o"
-  ldx #"o"
+  lda #"o"
   jsr write_character
 
 ; Write "r"
-  ldx #"r"
+  lda #"r"
   jsr write_character
 
 ; Write "l"
-  ldx #"l"
+  lda #"l"
   jsr write_character
 
 ; Write "d"
-  ldx #"d"
+  lda #"d"
   jsr write_character
 
 ; Write "!"
-  ldx #"!"
+  lda #"!"
   jsr write_character
 
   jmp loop
 
 write_character:
-  stx PORTB
+  sta PORTB
   lda #RS ; Set RS; Clear RW/E bits
   sta PORTA
   lda #(RS | E) ; set E bit to enable instruction
