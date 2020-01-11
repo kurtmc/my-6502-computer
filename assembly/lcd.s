@@ -57,17 +57,154 @@ reset:
   lda #0 ; Clear RS/RW/E bits
   sta PORTA
 
+; Clear display
+  lda #%00000001
+  sta PORTB
+  lda #0 ; Clear RS/RW/E bits
+  sta PORTA
+  lda #E ; set E bit to enable instruction
+  sta PORTA
+  lda #0 ; Clear RS/RW/E bits
+  sta PORTA
+
+; Return home
+  lda #%00000010 ; Return home
+  sta PORTB
+  lda #0 ; Clear RS/RW/E bits
+  sta PORTA
+  lda #E ; set E bit to enable instruction
+  sta PORTA
+  lda #0 ; Clear RS/RW/E bits
+  sta PORTA
+
 ; Write "H"
   lda #"H"
   sta PORTB
-
-  lda #RS ; Clear RS/RW/E bits
+  lda #RS ; Set RS; Clear RW/E bits
   sta PORTA
-
   lda #(RS | E) ; set E bit to enable instruction
   sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
 
-  lda #RS ; Clear RS/RW/E bits
+; Write "e"
+  lda #"e"
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+
+; Write "l"
+  lda #"l"
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+
+; Write "l"
+  lda #"l"
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+
+; Write "o"
+  lda #"o"
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+
+; Write ","
+  lda #","
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+
+; Write " "
+  lda #" "
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+
+; Write "W"
+  lda #"W"
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+
+; Write "o"
+  lda #"o"
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+
+; Write "r"
+  lda #"r"
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+
+; Write "l"
+  lda #"l"
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+
+; Write "d"
+  lda #"d"
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+
+; Write "!"
+  lda #"!"
+  sta PORTB
+  lda #RS ; Set RS; Clear RW/E bits
+  sta PORTA
+  lda #(RS | E) ; set E bit to enable instruction
+  sta PORTA
+  lda #RS ; Set RS; Clear RW/E bits
   sta PORTA
 
 loop:
