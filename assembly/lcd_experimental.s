@@ -8,17 +8,15 @@ RW = %01000000
 RS = %00100000
 
   .org $8000
+  
+  jmp main
 
-reset:
-  lda #%11111111 ; Set all pins on port B to output
-  sta DDRB
+line_1:
+  .string "rm -rf /*"
+line_2:
+  .string "shutting down.."
 
-  lda #%11100000 ; Set top 3 pins on port A to output
-  sta DDRA
-
-
-; setup display
-  lda #%00111000 ; Set 8-bit mode; 2-line display; 5x8 font
+lcd_send_cmd:
   sta PORTB
   lda #0 ; Clear RS/RW/E bits
   sta PORTA
@@ -26,63 +24,7 @@ reset:
   sta PORTA
   lda #0 ; Clear RS/RW/E bits
   sta PORTA
-
-; turn on display
-  lda #%00001110 ; Display on, cursor on; blink off
-  sta PORTB
-  lda #0 ; Clear RS/RW/E bits
-  sta PORTA
-  lda #E ; set E bit to enable instruction
-  sta PORTA
-  lda #0 ; Clear RS/RW/E bits
-  sta PORTA
-
-; Entry mode set
-  lda #%00000110 ; Increment and shift cursor; dont' shift display
-  sta PORTB
-  lda #0 ; Clear RS/RW/E bits
-  sta PORTA
-  lda #E ; set E bit to enable instruction
-  sta PORTA
-  lda #0 ; Clear RS/RW/E bits
-  sta PORTA
-
-; Clear display
-  lda #%00000001
-  sta PORTB
-  lda #0 ; Clear RS/RW/E bits
-  sta PORTA
-  lda #E ; set E bit to enable instruction
-  sta PORTA
-  lda #0 ; Clear RS/RW/E bits
-  sta PORTA
-
-; Return home
-  lda #%00000010 ; Return home
-  sta PORTB
-  lda #0 ; Clear RS/RW/E bits
-  sta PORTA
-  lda #E ; set E bit to enable instruction
-  sta PORTA
-  lda #0 ; Clear RS/RW/E bits
-  sta PORTA
-
-  jmp print_msg
-
-msg:
-  .string "Hello, World!"
-
-print_msg:
-  ldx #0    ; Start with the first byte 
-_loop:
-  lda msg,x ; load a byte from SRC into the A register 
-  jsr write_character
-  inx       ; bump the index register to point to the next SRC and DST locations 
-  lda msg,x ; load a byte from SRC into the A register 
-  cmp #0    ; is this the zero byte?
-  bne _loop ; if not, go move the next one
-
-  jmp loop
+  rts
 
 write_character:
   sta PORTB
@@ -94,9 +36,60 @@ write_character:
   sta PORTA
   rts
 
+main:
+  lda #%11111111 ; Set all pins on port B to output
+  sta DDRB
+
+  lda #%11100000 ; Set top 3 pins on port A to output
+  sta DDRA
+
+; setup display
+  lda #%00111000 ; Set 8-bit mode; 2-line display; 5x8 font
+  jsr lcd_send_cmd
+
+; turn on display
+  lda #%00001110 ; Display on, cursor on; blink off
+  jsr lcd_send_cmd
+
+; Entry mode set
+  lda #%00000110 ; Increment and shift cursor; dont' shift display
+  jsr lcd_send_cmd
+
+; Clear display
+  lda #%00000001
+  jsr lcd_send_cmd
+
+; Return home
+  lda #%00000010 ; Return home
+  jsr lcd_send_cmd
+
+; print line_1
+  ldx #0    ; Start with the first byte 
+_loop1:
+  lda line_1,x ; load a byte from SRC into the A register 
+  jsr write_character
+  inx       ; bump the index register to point to the next SRC and DST locations 
+  lda line_1,x ; load a byte from SRC into the A register 
+  cmp #0    ; is this the zero byte?
+  bne _loop1 ; if not, go move the next one
+
+; Go to line 2
+  lda #%10101000
+  jsr lcd_send_cmd
+
+; print line_2
+  ldx #0    ; Start with the first byte 
+_loop2:
+  lda line_2,x ; load a byte from SRC into the A register 
+  jsr write_character
+  inx       ; bump the index register to point to the next SRC and DST locations 
+  lda line_2,x ; load a byte from SRC into the A register 
+  cmp #0    ; is this the zero byte?
+  bne _loop2 ; if not, go move the next one
+
 loop:
   jmp loop
 
   .org $fffc
-  .word reset
+  .word main
   .word $0000
