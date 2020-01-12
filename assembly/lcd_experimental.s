@@ -61,6 +61,7 @@ lcd_send_cmd:
   rts
 
 write_character:
+  jsr wait_not_busy
   sta PORTB
   lda #RS ; Set RS; Clear RW/E bits
   sta PORTA
