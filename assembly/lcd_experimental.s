@@ -1,3 +1,5 @@
+TMP_A = $0000
+TMP_X = $0001
 PORTB = $6000 ; port B on 6522
 PORTA = $6001 ; port A on 6522
 DDRB = $6002 ; data direction register for port B
@@ -17,27 +19,38 @@ line_2:
   .string "shutting down.."
 
 wait_not_busy:
+  sta TMP_A ; temporarily store register A
+  stx TMP_X ; temporarily store register X
+
   ; make port B input
   lda #%00000000
   sta DDRB
+
+_wait_not_busy_loop:
   lda #0 ; Clear RS/RW/E bits
   sta PORTA
-  lda #(RW| E) ; Set E and RW
+
+  lda #(RW | E) ; Set E and RW
   sta PORTA
+
+  ldx PORTB
+
   lda #0 ; Clear RS/RW/E bits
   sta PORTA
-  lda PORTB
-  ; make port B output
-  lda #%11111111
-  sta DDRB
+
   cmp #%10000000 ; busy bit is highest bit
-  bcs wait_not_busy
+  bcs _wait_not_busy_loop
+
   ; make port B output
   lda #%11111111
   sta DDRB
+
+  lda TMP_A ; return register A
+  ldx TMP_X ; return register X
   rts
 
 lcd_send_cmd:
+  jsr wait_not_busy
   sta PORTB
   lda #0 ; Clear RS/RW/E bits
   sta PORTA
