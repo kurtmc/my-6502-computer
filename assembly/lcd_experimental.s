@@ -8,13 +8,34 @@ RW = %01000000
 RS = %00100000
 
   .org $8000
-  
+
   jmp main
 
 line_1:
   .string "rm -rf /*"
 line_2:
   .string "shutting down.."
+
+wait_not_busy:
+  ; make port B input
+  lda #%00000000
+  sta DDRB
+  lda #0 ; Clear RS/RW/E bits
+  sta PORTA
+  lda #(RW| E) ; Set E and RW
+  sta PORTA
+  lda #0 ; Clear RS/RW/E bits
+  sta PORTA
+  lda PORTB
+  ; make port B output
+  lda #%11111111
+  sta DDRB
+  cmp #%10000000 ; busy bit is highest bit
+  bcs wait_not_busy
+  ; make port B output
+  lda #%11111111
+  sta DDRB
+  rts
 
 lcd_send_cmd:
   sta PORTB
@@ -64,12 +85,12 @@ main:
   jsr lcd_send_cmd
 
 ; print line_1
-  ldx #0    ; Start with the first byte 
+  ldx #0    ; Start with the first byte
 _loop1:
-  lda line_1,x ; load a byte from SRC into the A register 
+  lda line_1,x ; load a byte from SRC into the A register
   jsr write_character
-  inx       ; bump the index register to point to the next SRC and DST locations 
-  lda line_1,x ; load a byte from SRC into the A register 
+  inx       ; bump the index register to point to the next SRC and DST locations
+  lda line_1,x ; load a byte from SRC into the A register
   cmp #0    ; is this the zero byte?
   bne _loop1 ; if not, go move the next one
 
@@ -78,12 +99,12 @@ _loop1:
   jsr lcd_send_cmd
 
 ; print line_2
-  ldx #0    ; Start with the first byte 
+  ldx #0    ; Start with the first byte
 _loop2:
-  lda line_2,x ; load a byte from SRC into the A register 
+  lda line_2,x ; load a byte from SRC into the A register
   jsr write_character
-  inx       ; bump the index register to point to the next SRC and DST locations 
-  lda line_2,x ; load a byte from SRC into the A register 
+  inx       ; bump the index register to point to the next SRC and DST locations
+  lda line_2,x ; load a byte from SRC into the A register
   cmp #0    ; is this the zero byte?
   bne _loop2 ; if not, go move the next one
 
