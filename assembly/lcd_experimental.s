@@ -18,6 +18,15 @@ line_1:
 line_2:
   .string "shutting down.."
 
+delay:
+  ldy #100
+_loop3:
+  nop
+  dey
+  cpy #0
+  bne _loop3
+  rts
+
 wait_not_busy:
   sta TMP_A ; temporarily store register A
   stx TMP_X ; temporarily store register X
@@ -34,6 +43,8 @@ _wait_not_busy_loop:
   sta PORTA
 
   ldx PORTB
+
+  jsr delay
 
   lda #0 ; Clear RS/RW/E bits
   sta PORTA
@@ -56,6 +67,9 @@ lcd_send_cmd:
   sta PORTA
   lda #E ; set E bit to enable instruction
   sta PORTA
+
+  jsr delay
+
   lda #0 ; Clear RS/RW/E bits
   sta PORTA
   rts
@@ -67,6 +81,9 @@ write_character:
   sta PORTA
   lda #(RS | E) ; set E bit to enable instruction
   sta PORTA
+
+  jsr delay
+
   lda #RS ; Set RS; Clear RW/E bits
   sta PORTA
   rts
